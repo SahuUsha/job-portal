@@ -201,10 +201,81 @@ const applicationCount = async(req: Request, res: Response) => {
     }
 }
 
+const getJobApplications = async(req: Request, res: Response) => {
+    try {
+        
+        const jobId = req.params.id;
+
+        const job = await prisma.job.findUnique({
+            where : {
+                id : jobId
+            }
+        })
+
+       if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    const applications = await prisma.application.findMany({
+        where : {jobId},
+        include:{
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true
+                    }
+                },
+                job: {
+                    select: {
+                        title: true,
+                        department: true
+                    }
+                }
+            
+        }
+    })
+
+    const enrichedApplications = await Promise.all(
+        applications.map(async (application)=>{
+            let resume = null;
+
+            if((application as any).usedOnsiteResume){
+                resume = await prisma.resume.findUnique({
+                    where: {userId: application.userId},
+                })
+            }
+
+
+            return {
+                ...application,
+                resume
+            }
+
+        })
+    )
+
+    res.status(200).json({
+        jobId,
+        totalApplications: applications.length,
+        applications : enrichedApplications
+    })
+
+    } catch (error) {
+        console.error("Error fetching job applications:", error);
+        res.status(500).json({ message: "Error fetching job applications" });
+        
+    }
+}
+
+
 export {
     createJob,
     getallActiveJob,
     getJobById,
     toggleJobActivity,
     applicationCount,
+    getJobApplications
+
+
 }

@@ -23,7 +23,7 @@ model User{
   role         Role    @default(USER)
   applicatons  Application[]
   profile      Resume?
-  createdAt      DateTime  @default(now())
+  createdAt    DateTime  @default(now())
   jobs         Job[]       
 
 }
@@ -62,6 +62,8 @@ model Application{
   status            ApplicationStatus  @default(PENDING)
   createdAt         DateTime @default(now())
   updated           DateTime  @updatedAt
+  usedOnsiteResume  Boolean @default(false) 
+  applicationLog    ApplicationLog[]
 }
 
 model Resume{
@@ -70,6 +72,16 @@ model Resume{
   userId       String   @unique
   content      Json   
   createdAt     DateTime    @default(now())
+}
+
+model ApplicationLog{
+   id                 String @id @default(cuid())
+   applicationId      String
+  application         Application @relation(fields: [applicationId], references: [id])
+  status              ApplicationStatus
+  timestamp           DateTime @default(now())
+
+
 }
 
 enum ApplicationStatus{

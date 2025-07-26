@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signInUser = exports.createUser = void 0;
+exports.getResume = exports.getAdminDashboard = exports.upsertResume = exports.signInUser = exports.createUser = void 0;
 const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
 const hash_1 = require("../utils/hash");
@@ -134,3 +134,87 @@ const signInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.signInUser = signInUser;
+const upsertResume = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // @ts-ignore
+    const userId = req.userId;
+    const { content } = req.body;
+    if (!content || typeof content !== "object") {
+        return res.status(400).json({ message: "Invalid resume content provided" });
+    }
+    try {
+        const resume = yield prisma.resume.upsert({
+            where: { userId },
+            update: { content },
+            create: { userId, content }
+        });
+        res.status(200).json({
+            message: "Resume upserted successfully",
+            resume
+        });
+    }
+    catch (error) {
+        console.error("Error upserting resume:", error);
+        res.status(500).json({
+            message: "Error upserting resume",
+        });
+    }
+});
+exports.upsertResume = upsertResume;
+const getResume = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // @ts-ignore
+    const userId = req.userId;
+    try {
+        const resume = yield prisma.resume.findUnique({
+            where: { userId },
+        });
+        if (!resume) {
+            return res.status(404).json({
+                message: "Resume not found",
+            });
+        }
+        res.status(200).json({
+            message: "Resume fetched successfully",
+            resume,
+        });
+    }
+    catch (error) {
+        console.error("Error fetching resume:", error);
+        res.status(500).json({
+            message: "Error fetching resume",
+        });
+    }
+});
+exports.getResume = getResume;
+const getAdminDashboard = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // @ts-ignore
+    const userId = req.userId;
+    try {
+        const job = yield prisma.job.findMany({
+            where: {
+                ownerId: userId
+            },
+            include: {
+                _count: {
+                    select: {
+                        applications: true
+                    }
+                }
+            }
+        });
+        const stats = job.map(job => ({
+            id: job.id,
+            titlle: job.title,
+            isActive: job.isActive,
+            applicationCount: job._count.applications
+        }));
+        res.status(200).json({
+            stats
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error fetching admin dashboard"
+        });
+    }
+});
+exports.getAdminDashboard = getAdminDashboard;

@@ -158,7 +158,107 @@ const role = roleInput.toUpperCase() as Role;
       
 }
 
+const upsertResume = async(req: Request , res : Response)=>{
+
+    // @ts-ignore
+   const userId = req.userId as string;
+   const {content} = req.body;
+
+   if (!content || typeof content !== "object") {
+    return res.status(400).json({ message: "Invalid resume content provided" });
+  }
+
+
+    try {
+
+       
+      const resume = await prisma.resume.upsert({
+      where: { userId },
+      update: { content },
+      create: { userId, content }
+    });
+
+       res.status(200).json({
+        message: "Resume upserted successfully",
+        resume
+       })
+        
+    } catch (error) {
+        console.error("Error upserting resume:", error);
+        res.status(500).json({
+            message: "Error upserting resume",  
+        
+    })
+
+}
+}
+
+const getResume = async (req: Request, res: Response) => {
+  // @ts-ignore
+  const userId = req.userId as string;
+
+  try {
+    const resume = await prisma.resume.findUnique({
+      where: { userId },
+    });
+
+    if (!resume) {
+      return res.status(404).json({
+        message: "Resume not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Resume fetched successfully",
+      resume,
+    });
+  } catch (error) {
+    console.error("Error fetching resume:", error);
+    res.status(500).json({
+      message: "Error fetching resume",
+    });
+  }
+};
+
+const getAdminDashboard = async(req: Request, res: Response)=>{
+    
+    // @ts-ignore
+    const userId = req.userId ;
+    try {
+        const job = await prisma.job.findMany({
+            where:{
+                ownerId: userId
+            },
+            include:{
+                _count:{
+                    select:{
+                        applications: true
+                    }
+                }
+            }
+        })
+ 
+        const stats = job.map(job=>({
+            id : job.id,
+            titlle : job.title,
+            isActive : job.isActive,
+            applicationCount: job._count.applications
+        }))
+
+        res.status(200).json({
+            stats
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "Error fetching admin dashboard"
+    })
+
+}
+}
 export {
     createUser,
-    signInUser
+    signInUser,
+    upsertResume,
+    getAdminDashboard,
+    getResume
 }

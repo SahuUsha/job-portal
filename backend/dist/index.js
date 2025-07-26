@@ -8,6 +8,8 @@ const cors_1 = __importDefault(require("cors"));
 const userControllers_1 = require("./controllers/userControllers");
 const job_controller_1 = require("./controllers/job.controller");
 const auth_middleware_1 = require("./middlewares/auth.middleware");
+const upload_1 = __importDefault(require("./utils/upload"));
+const application_controller_1 = require("./controllers/application.controller");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
@@ -18,4 +20,9 @@ app.get("/getAllActiveJob", auth_middleware_1.authMiddleware, job_controller_1.g
 app.get("/job/:id", auth_middleware_1.authMiddleware, job_controller_1.getJobById);
 app.patch("/job/toggle/:id", auth_middleware_1.authMiddleware, job_controller_1.toggleJobActivity);
 app.get("/job/application-count/:id", auth_middleware_1.authMiddleware, job_controller_1.applicationCount);
+app.post("/apply/:id", auth_middleware_1.authMiddleware, upload_1.default.single("resume"), application_controller_1.applicationfill);
+app.get("/job/:id/applications", auth_middleware_1.authMiddleware, job_controller_1.getJobApplications);
+app.patch("/application/:id", auth_middleware_1.authMiddleware, application_controller_1.updateApplicationStatus);
+app.get("/resume/profile", auth_middleware_1.authMiddleware, userControllers_1.getResume);
+app.post("/resume/upsert", auth_middleware_1.authMiddleware, userControllers_1.upsertResume);
 app.listen(5000);

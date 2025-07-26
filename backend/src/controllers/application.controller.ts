@@ -39,11 +39,10 @@ const  applicationfill = async(req: Request, res: Response) => {
             return res.status(400).json({ error: "You have already applied for this job" });
         }
 
-        // Create a new application 
 
-        const {answer} = req.body
+        const {answer, usedOnsiteResume = false } = req.body
 
-        const resumeUrl = req.file?.path; // Assuming you are using multer for file uploads
+        const resumeUrl = req.file?.path; 
 
         
         const newApplication = await prisma.application.create({
@@ -51,7 +50,8 @@ const  applicationfill = async(req: Request, res: Response) => {
                 jobId: jobId,
                 userId: userId,
                 answer: answer,
-                resumeUrl: resumeUrl || null // Store the resume URL if provided
+               resumeUrl: usedOnsiteResume ? null : resumeUrl || null,
+               usedOnsiteResume: usedOnsiteResume
             }
         });
 
@@ -63,4 +63,37 @@ const  applicationfill = async(req: Request, res: Response) => {
     }
 }
 
-export { applicationfill };
+const updateApplicationStatus =async(req : Request , res : Response)=>{
+    try {
+      const {status} = req.body;
+
+      const applicationId = req.params.id;
+
+      const updatedApplication = await prisma.application.update({
+        where: { id : applicationId} ,
+        data: {status}
+      })
+  
+      
+
+      res.status(200).json({
+        message: "Application status updated successfully",
+        application: updatedApplication
+      })
+        
+    } catch (error) {
+        console.error("Error updating application status:", error);
+
+        res.status(500).json({
+            error: "Error updating application status"
+        })
+    }
+
+}
+export { 
+    applicationfill,
+    updateApplicationStatus
+
+ };
+
+

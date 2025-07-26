@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.applicationCount = exports.toggleJobActivity = exports.getJobById = exports.getallActiveJob = exports.createJob = void 0;
+exports.getJobApplications = exports.applicationCount = exports.toggleJobActivity = exports.getJobById = exports.getallActiveJob = exports.createJob = void 0;
 const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
 const prisma = new client_1.PrismaClient();
@@ -179,3 +179,53 @@ const applicationCount = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.applicationCount = applicationCount;
+const getJobApplications = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const jobId = req.params.id;
+        const job = yield prisma.job.findUnique({
+            where: {
+                id: jobId
+            }
+        });
+        if (!job) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+        const applications = yield prisma.application.findMany({
+            where: { jobId },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true
+                    }
+                },
+                job: {
+                    select: {
+                        title: true,
+                        department: true
+                    }
+                }
+            }
+        });
+        const enrichedApplications = yield Promise.all(applications.map((application) => __awaiter(void 0, void 0, void 0, function* () {
+            let resume = null;
+            if (application.usedOnsiteResume) {
+                resume = yield prisma.resume.findUnique({
+                    where: { userId: application.userId },
+                });
+            }
+            return Object.assign(Object.assign({}, application), { resume });
+        })));
+        res.status(200).json({
+            jobId,
+            totalApplications: applications.length,
+            applications: enrichedApplications
+        });
+    }
+    catch (error) {
+        console.error("Error fetching job applications:", error);
+        res.status(500).json({ message: "Error fetching job applications" });
+    }
+});
+exports.getJobApplications = getJobApplications;

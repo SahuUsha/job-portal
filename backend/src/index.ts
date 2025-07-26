@@ -1,11 +1,11 @@
 import express from "express"
 import cors from "cors"
-import { createUser, signInUser } from "./controllers/userControllers";
-import { applicationCount, createJob, getallActiveJob, getJobById, toggleJobActivity } from "./controllers/job.controller";
+import { createUser, getResume, signInUser, upsertResume } from "./controllers/userControllers";
+import { applicationCount, createJob, getallActiveJob, getJobApplications, getJobById, toggleJobActivity } from "./controllers/job.controller";
 import { authMiddleware } from "./middlewares/auth.middleware";
 import { get } from "http";
 import upload from "./utils/upload";
-import { applicationfill } from "./controllers/application.controller";
+import { applicationfill, updateApplicationStatus } from "./controllers/application.controller";
 
 
 const app = express()
@@ -22,5 +22,10 @@ app.patch("/job/toggle/:id",authMiddleware,toggleJobActivity )
 app.get("/job/application-count/:id",authMiddleware, applicationCount)
 
 app.post("/apply/:id", authMiddleware, upload.single("resume"), applicationfill)
+app.get("/job/:id/applications", authMiddleware, getJobApplications)
+app.patch("/application/:id" , authMiddleware, updateApplicationStatus)
+app.get("/resume/profile", authMiddleware, getResume)
+app.post("/resume/upsert",authMiddleware,upsertResume)
+
 
 app.listen(5000)
