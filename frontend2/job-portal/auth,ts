@@ -1,0 +1,6 @@
+import { authOptions } from "../job-portal/app/api/auth/[...nextauth]/authOptions"";
+import { getServerSession } from "next-auth";
+
+export async function auth() {
+  return await getServerSession(authOptions);
+}
