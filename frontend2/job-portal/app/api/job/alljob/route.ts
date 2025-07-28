@@ -10,13 +10,15 @@ const SECRET = process.env.NEXTAUTH_SECRET!;
 export async function GET(req: NextRequest) {
   try {
     const token = await getToken({ req, secret: SECRET });
+    console.log('DEBUG GET TOKEN:', token);
 
       console.log('DEBUG TOKEN:', token);
 
   if (!token) {
     return NextResponse.json({ message: 'No token found' }, { status: 401 });
   }
-    
+    console.log('DEBUG TOKEN ROLE:', token.role);
+  
 
     if (!token || token.role !== 'ADMIN') {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
