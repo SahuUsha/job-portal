@@ -3,6 +3,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+type ApplicationWithUserJob = {
+  id: string;
+  userId: string;
+  usedOnsiteResume?: boolean;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  job: {
+    title: string;
+    department: string;
+  };
+  // Add other fields from `application` as needed
+};
+
+
 export async function GET(req: NextRequest, context: { params: { id: string } }) {
   const { id } = context.params;
 
@@ -31,22 +48,22 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
       },
     });
 
-    const enrichedApplications = await Promise.all(
-      applications.map(async (application) => {
-        let resume = null;
+   const enrichedApplications = await Promise.all(
+  applications.map(async (application: ApplicationWithUserJob) => {
+    let resume = null;
 
-        if ((application as any).usedOnsiteResume) {
-          resume = await prisma.resume.findUnique({
-            where: { userId: application.userId },
-          });
-        }
+    if (application.usedOnsiteResume) {
+      resume = await prisma.resume.findUnique({
+        where: { userId: application.userId },
+      });
+    }
 
-        return {
-          ...application,
-          resume,
-        };
-      })
-    );
+    return {
+      ...application,
+      resume,
+    };
+  })
+);
 
     return NextResponse.json({
       jobId: id,

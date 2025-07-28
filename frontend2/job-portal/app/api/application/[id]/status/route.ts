@@ -1,11 +1,14 @@
-// app/api/application/[id]/status/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+// ✅ NO need to import or define RouteContext types
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } } // ✅ keep this inline type
+) {
   try {
-    const applicationId = params.id; // ✅ Correct usage now
+    const applicationId = params.id;
     const body = await req.json();
     const { status } = body;
 
@@ -20,6 +23,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     });
   } catch (error) {
     console.error('Error updating application status:', error);
-    return NextResponse.json({ error: 'Error updating application status' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Error updating application status' },
+      { status: 500 }
+    );
   }
 }

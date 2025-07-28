@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function ApplicationsPage() {
   const params = useParams();
@@ -37,9 +38,7 @@ export default function ApplicationsPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setApplications((prev) =>
-          prev.map((app) => (app.id === appId ? data.application : app))
-        );
+        fetchApplications();
       } else {
         alert(data.message || 'Failed to update status');
       }
@@ -52,59 +51,100 @@ export default function ApplicationsPage() {
     fetchApplications();
   }, []);
 
-  if (loading) return <div className="p-6 text-gray-700">Loading...</div>;
-  if (error) return <div className="p-6 text-red-600">{error}</div>;
+  if (loading) return <div className="p-6 text-gray-600 text-center">Loading applications...</div>;
+  if (error) return <div className="p-6 text-red-600 text-center">{error}</div>;
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Applications for {jobTitle}</h1>
-
-      <div className="space-y-4">
-        {applications.map((app) => (
-          <div key={app.id} className="border p-4 rounded shadow space-y-2">
-            <div>
-  {app.user ? (
-    <>
-      <h2 className="font-semibold text-lg">{app.user.name}</h2>
-      <p className="text-sm text-gray-600">{app.user.email}</p>
-    </>
-  ) : (
-    <p className="text-sm text-red-500">User data unavailable</p>
-  )}
-</div>
-            <div>
-              <span className="font-medium">Answer:</span>
-              <p className="text-gray-800 mt-1">{app.answer}</p>
-            </div>
-
-            {app.resumeUrl && (
-              <div>
-                <a
-                  href={app.resumeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline"
-                >
-                  View Resume (PDF)
-                </a>
-              </div>
-            )}
-
-            <div className="flex items-center gap-2">
-              <span className="font-medium">Status:</span>
-              <select
-                value={app.status}
-                onChange={(e) => handleStatusChange(app.id, e.target.value)}
-                className="border border-gray-300 rounded px-2 py-1 text-sm"
-              >
-                <option value="PENDING">Pending</option>
-                <option value="REVIEWED">Reviewed</option>
-                <option value="ACCEPTED">Accepted</option>
-                <option value="REJECTED">Rejected</option>
-              </select>
-            </div>
+    <div className="min-h-screen bg-gray-50 py-12 px-4 md:px-10">
+      <div className="max-w-5xl mx-auto space-y-10">
+        {/* Top Header with Dashboard Button */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-indigo-700">
+              Applications for <span className="text-gray-800">{jobTitle}</span>
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">Review and manage submitted applications</p>
           </div>
-        ))}
+
+          <Link
+            href="/admin/jobs"
+            className="w-[12rem] bg-indigo-600 text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-indigo-700 transition"
+          >
+            ⬅ Back to Dashboard
+          </Link>
+        </div>
+
+        {/* Application List */}
+        {applications.length === 0 ? (
+          <p className="text-center text-gray-600 mt-10">No applications found for this job.</p>
+        ) : (
+          <div className="grid gap-6">
+            {applications.map((app) => (
+              <div
+                key={app.id}
+                className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm transition hover:shadow-md"
+              >
+                {/* User Info */}
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-indigo-800">
+                      {app.user?.name || 'Unnamed Applicant'}
+                    </h2>
+                    <p className="text-sm text-gray-600">{app.user?.email || 'Email not available'}</p>
+                  </div>
+                  <span
+                    className={`text-xs font-medium px-3 py-1 rounded-full ${
+                      app.status === 'ACCEPTED'
+                        ? 'bg-green-100 text-green-700'
+                        : app.status === 'REJECTED'
+                        ? 'bg-red-100 text-red-600'
+                        : app.status === 'ON_HOLD'
+                        ? 'bg-yellow-100 text-yellow-700'
+                        : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    {app.status}
+                  </span>
+                </div>
+
+                {/* Answer */}
+                <div className="mb-3">
+                  <p className="text-sm font-medium text-gray-700 mb-1">Answer:</p>
+                  <p className="text-gray-800 text-sm leading-relaxed">{app.answer}</p>
+                </div>
+
+                {/* Resume */}
+                {app.resumeUrl && (
+                  <div className="mb-3">
+                    <a
+                      href={app.resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      📄 View Resume (PDF)
+                    </a>
+                  </div>
+                )}
+
+                {/* Status Update */}
+                <div className="flex items-center gap-3 mt-4">
+                  <label className="text-sm font-medium text-gray-700">Update Status:</label>
+                  <select
+                    value={app.status}
+                    onChange={(e) => handleStatusChange(app.id, e.target.value)}
+                    className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+                  >
+                    <option value="PENDING">Pending</option>
+                    <option value="ON_HOLD">On Hold</option>
+                    <option value="ACCEPTED">Accepted</option>
+                    <option value="REJECTED">Rejected</option>
+                  </select>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
