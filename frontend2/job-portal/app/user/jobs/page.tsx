@@ -178,12 +178,12 @@ const handleSignOut = () => {
             <p className="text-sm text-gray-600">
               <strong>Type:</strong> {selectedJob.jobType}
             </p>
-            <Link
+            {/* <Link
               href={`/job/${selectedJob.id}/apply`}
               className="inline-block mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
             >
               Apply Now
-            </Link>
+            </Link> */}
           </div>
         </div>
       )}

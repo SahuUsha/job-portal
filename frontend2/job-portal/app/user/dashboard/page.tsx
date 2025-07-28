@@ -123,6 +123,7 @@ export default function UserDashboardPage() {
         {/* Resume Section */}
         <div className="bg-white rounded-xl shadow p-6 space-y-4 max-w-3xl mx-auto">
           <h2 className="text-xl font-semibold text-indigo-800">My Resume</h2>
+          <p> Fill in the resume field if you'd like to include your resume details.</p>
 
           {["name", "linkedin", "github", "education", "skills"].map((field) => (
             <input

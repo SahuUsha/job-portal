@@ -57,11 +57,11 @@ export default function ApplicationsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 md:px-10">
       <div className="max-w-5xl mx-auto space-y-10">
-        {/* Top Header with Dashboard Button */}
+        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-indigo-700">
-             Applied Applications
+              {jobTitle || 'Job'} - Applications
             </h1>
             <p className="text-sm text-gray-500 mt-1">Review and manage submitted applications</p>
           </div>
@@ -74,7 +74,7 @@ export default function ApplicationsPage() {
           </Link>
         </div>
 
-        {/* Application List */}
+        {/* Applications List */}
         {applications.length === 0 ? (
           <p className="text-center text-gray-600 mt-10">No applications found for this job.</p>
         ) : (
@@ -113,8 +113,8 @@ export default function ApplicationsPage() {
                   <p className="text-gray-800 text-sm leading-relaxed">{app.answer}</p>
                 </div>
 
-                {/* Resume */}
-                {app.resumeUrl && (
+                {/* Resume Display */}
+                {app.resumeUrl ? (
                   <div className="mb-3">
                     <a
                       href={app.resumeUrl}
@@ -125,6 +125,15 @@ export default function ApplicationsPage() {
                       📄 View Resume (PDF)
                     </a>
                   </div>
+                ) : app.resume ? (
+                  <div className="mb-3">
+                    <p className="text-sm text-gray-600 italic mb-1">📝 Resume submitted onsite:</p>
+                    <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto max-h-64 whitespace-pre-wrap">
+                      {JSON.stringify(app.resume.content, null, 2)}
+                    </pre>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-400 italic">No resume provided.</p>
                 )}
 
                 {/* Status Update */}
