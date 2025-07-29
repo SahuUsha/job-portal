@@ -12,6 +12,8 @@ export async function GET() {
         location: true,
         salary: true,
         jobType: true,
+        department: true,
+        requireResume: true,
         isActive: true,
         createdAt: true,
         customFields: true, // ✅ include customFields

@@ -119,11 +119,21 @@ const handleSignOut = () => {
 
       <p className="text-gray-700 line-clamp-2">{job.description}</p>
       <p className="text-sm text-gray-600">
-        <strong>Location:</strong> {job.location}
-      </p>
-      <p className="text-sm text-gray-600">
-        <strong>Type:</strong> {job.jobType}
-      </p>
+  <strong>Location:</strong> {job.location}
+</p>
+<p className="text-sm text-gray-600">
+  <strong>Department:</strong> {job.department}
+</p>
+<p className="text-sm text-gray-600">
+  <strong>Type:</strong> {job.jobType}
+</p>
+<p className="text-sm text-gray-600">
+  <strong>Requires Resume:</strong> {job.requireResume ? 'Yes' : 'No'}
+</p>
+<p className="text-sm text-gray-600">
+  <strong>Posted On:</strong> {new Date(job.createdAt).toLocaleDateString()}
+</p>
+
 
       <div className="flex gap-3 mt-2">
         <button
@@ -178,6 +188,12 @@ const handleSignOut = () => {
             <p className="text-sm text-gray-600">
               <strong>Type:</strong> {selectedJob.jobType}
             </p>
+            <p className="text-sm text-gray-600">
+  <strong>Requires Resume:</strong> {job.requireResume ? 'Yes' : 'No'}
+</p>
+<p className="text-sm text-gray-600">
+  <strong>Posted On:</strong> {new Date(job.createdAt).toLocaleDateString()}
+</p>
             {/* <Link
               href={`/job/${selectedJob.id}/apply`}
               className="inline-block mt-4 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
