@@ -189,10 +189,10 @@ const handleSignOut = () => {
               <strong>Type:</strong> {selectedJob.jobType}
             </p>
             <p className="text-sm text-gray-600">
-  <strong>Requires Resume:</strong> {job.requireResume ? 'Yes' : 'No'}
+  <strong>Requires Resume:</strong> {selectedJob.requireResume ? 'Yes' : 'No'}
 </p>
 <p className="text-sm text-gray-600">
-  <strong>Posted On:</strong> {new Date(job.createdAt).toLocaleDateString()}
+  <strong>Posted On:</strong> {new Date(selectedJob.createdAt).toLocaleDateString()}
 </p>
             {/* <Link
               href={`/job/${selectedJob.id}/apply`}
