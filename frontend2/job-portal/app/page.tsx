@@ -9,7 +9,7 @@ export default function Home() {
       <main className="flex-grow bg-gradient-to-br from-indigo-600 to-blue-400 flex items-center justify-center py-20 px-6">
         <div className="text-center max-w-2xl">
           <h1 className="text-white text-5xl sm:text-6xl font-bold mb-6 leading-tight">
-            Welcome to <span className="text-yellow-300">HireNest</span>
+            Welcome to <span className="text-yellow-300">RecruitPro</span>
           </h1>
           <p className="text-white text-xl sm:text-2xl mb-10">
             Your one-stop job portal. Find jobs, apply effortlessly, and take your career to the next level.
@@ -31,7 +31,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="bg-white py-16 px-6 text-center">
-        <h2 className="text-3xl font-bold text-indigo-700 mb-8">Why Choose HireNest?</h2>
+        <h2 className="text-3xl font-bold text-indigo-700 mb-8">Why Choose RecruitPro?</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 max-w-5xl mx-auto">
           <div className="bg-indigo-50 p-6 rounded-lg shadow">
             <h3 className="text-xl font-semibold text-indigo-800 mb-2">Easy Job Search</h3>
@@ -51,9 +51,9 @@ export default function Home() {
       {/* About Section */}
       <section className="bg-indigo-100 py-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-indigo-800 mb-4">About HireNest</h2>
+          <h2 className="text-3xl font-bold text-indigo-800 mb-4">About RecruitPro</h2>
           <p className="text-gray-800 text-lg">
-            HireNest is designed to bridge the gap between top talent and great companies. Whether you're a fresher or a seasoned professional, our portal offers tools to simplify your job search journey.
+            RecruitPro is designed to bridge the gap between top talent and great companies. Whether you're a fresher or a seasoned professional, our portal offers tools to simplify your job search journey.
           </p>
         </div>
       </section>
@@ -61,7 +61,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-indigo-700 text-white py-6 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
-          <div>© {new Date().getFullYear()} HireNest. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} RecruitPro. All rights reserved.</div>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:underline">Privacy Policy</Link>
             <Link href="/terms" className="hover:underline">Terms of Service</Link>

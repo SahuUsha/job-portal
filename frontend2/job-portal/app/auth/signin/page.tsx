@@ -43,7 +43,7 @@ export default function SignInPage() {
         className="bg-white p-8 sm:p-10 rounded-2xl shadow-2xl w-full max-w-sm"
       >
         <h2 className="text-3xl font-bold text-indigo-700 mb-6 text-center">
-          Sign In to <span className="text-yellow-400">HireNest</span>
+          Sign In to <span className="text-yellow-400">RecruitPro</span>
         </h2>
 
         {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}

@@ -52,7 +52,7 @@ export default function AdminJobsPage() {
     <div className="min-h-screen bg-gray-100 py-10 px-6 space-y-6">
       {/* Top Navbar */}
       <div className="flex justify-between items-center max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-indigo-700">Manage Jobs</h1>
+        <h1 className="text-3xl font-bold text-indigo-700">Admin Page - Manage Jobs</h1>
 
         <div className="flex items-center gap-4">
           <Link

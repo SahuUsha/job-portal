@@ -34,7 +34,7 @@ export default function SignUpPage() {
         className="w-full max-w-md bg-white p-8 sm:p-10 rounded-2xl shadow-2xl space-y-6"
       >
         <h2 className="text-3xl font-bold text-indigo-700 text-center">
-          Join <span className="text-yellow-400">HireNest</span>
+          Join <span className="text-yellow-400">RecruitPro</span>
         </h2>
 
         <div>

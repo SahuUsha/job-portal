@@ -90,7 +90,7 @@ export default function UserDashboardPage() {
         <h1 className="text-xl font-bold text-indigo-700">
            <Link href="/user/jobs
            " className="text-indigo-700 hover:text-yellow-500 transition">
-            HireNest
+            RecruitPro
             </Link>
           </h1>
         <div className="flex gap-4">

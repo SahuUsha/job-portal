@@ -109,7 +109,7 @@ export default function ApplicationsPage() {
 
                 {/* Answer */}
                 <div className="mb-3">
-                  <p className="text-sm font-medium text-gray-700 mb-1">Answer:</p>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Applicant Response:</p>
                   <p className="text-gray-800 text-sm leading-relaxed">{app.answer}</p>
                 </div>
 
